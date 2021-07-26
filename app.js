@@ -78,9 +78,9 @@ beginningPrompt = () => {
 viewAllEmployees = () => {
 
     connection.query("SELECT employee.first_name, employee.last_name, role.title, role.salary, department.department_name, CONCAT(e.first_name, ' ' ,e.last_name) AS Manager FROM employee INNER JOIN role on role.id = employee.role_id INNER JOIN department on department.id = role.department_id left join employee e on employee.manager_id = e.id;", 
-    (err, res) => {
+    (err, val) => {
       if (err) throw err
-      console.table(res);
+      console.table(val);
       beginningPrompt();
   });
 
@@ -89,20 +89,20 @@ viewAllEmployees = () => {
 viewAllRoles = () => {
 
     connection.query("SELECT employee.first_name, employee.last_name, role.title AS Title FROM employee JOIN role ON employee.role_id = role.id;", 
-    (err, res) => {
+    (err, val) => {
     if (err) throw err
-    console.table(res);
+    console.table(val);
     beginningPrompt();
     });
 
 };
 
 viewAllDepartments = () => {
-
-    connection.query("SELECT employee.first_name, employee.last_name, department.name AS Department FROM employee JOIN role ON employee.role_id = role.id JOIN department ON role.department_id = department.id ORDER BY employee.id;", 
-    (err, res) => {
+ 
+    connection.query("SELECT employee.first_name, employee.last_name, department.department_name AS Department FROM employee JOIN role ON employee.role_id = role.id JOIN department ON role.department_id = department.id ORDER BY employee.id;", 
+    (err, val) => {
     if (err) throw err
-    console.table(res);
+    console.table(val);
     beginningPrompt();
     });
 
@@ -110,10 +110,10 @@ viewAllDepartments = () => {
 
 let deptArray = [];
 selectDepartment = () => {
-  connection.query("SELECT id, name FROM department", (err, res) => {
+  connection.query("SELECT id, name FROM department", (err, val) => {
     if (err) throw err
-    for (let i = 0; i < res.length; i++) {
-      deptArray.push(res[i].name);
+    for (let i = 0; i < val.length; i++) {
+      deptArray.push(val[i].name);
       
     };
 
@@ -123,12 +123,12 @@ selectDepartment = () => {
 
 let rolesArray = [];
 selectRole = () => {
-  connection.query("SELECT * FROM role", (err, res) => {
+  connection.query("SELECT * FROM role", (err, val) => {
     if (err) throw err
 
-    for (let i = 0; i < res.length; i++) {
+    for (let i = 0; i < val.length; i++) {
 
-      rolesArray.push(res[i].title);
+      rolesArray.push(val[i].title);
     };
 
   });
@@ -137,10 +137,10 @@ selectRole = () => {
 
 let managersArray = [];
 selectManager = () => {
-  connection.query("SELECT first_name, last_name FROM employee WHERE manager_id IS NULL", function(err, res) {
+  connection.query("SELECT first_name, last_name FROM employee WHERE manager_id IS NULL", function(err, val) {
     if (err) throw err
-    for (let i = 0; i < res.length; i++) {
-      managersArray.push(res[i].first_name);
+    for (let i = 0; i < val.length; i++) {
+      managersArray.push(val[i].first_name);
     };
 
   });
@@ -207,7 +207,7 @@ addEmployee = () => {
 
 updateEmployee = () => {
 
-  connection.query("SELECT employee.last_name, role.title FROM employee JOIN role ON employee.role_id = role.id;", (err, res) => {
+  connection.query("SELECT employee.last_name, role.title FROM employee JOIN role ON employee.role_id = role.id;", (err, val) => {
 
     if (err) throw err;
 
@@ -221,9 +221,9 @@ updateEmployee = () => {
 
           let lastName = [];
 
-          for(let i = 0; i < res.length; i++){
+          for(let i = 0; i < val.length; i++){
 
-            lastName.push(res[i].last_name);
+            lastName.push(val[i].last_name);
 
           }
 
@@ -269,9 +269,14 @@ updateEmployee = () => {
 
 addRole = () => {
 
-  connection.query("SELECT role.title AS Title, role.salary AS Salary, role.department_id AS Department FROM role", (err, res) => {
+  // const departmentChoices = department.map(({ id, name }) => ({
+  //   name: name,
+  //   value: id
+  // }));
 
-    inquier.prompt([
+ 
+
+     inquier.prompt([
 
       {
 
@@ -294,30 +299,30 @@ addRole = () => {
         message:"Which department will this role be under?",
         choices: selectDepartment()
 
-      }
-    ]).then((res) => {
+      },
+    ]).then((val) => {
 
-
+      let deptID = selectDepartment().indexOf(val.department_id) + 1
       connection.query("INSERT INTO role SET ?",
       
       {
 
-        title: res.title,
-        salary: res.salary,
-        department_id: res.department_id
+        title: val.title,
+        salary: val.salary,
+        department_id: deptID
 
       },
       (err) => {
 
         if(err) throw err;
-        console.table(res);
+        console.table(val);
         beginningPrompt();
 
       })
     })
-  });
+  };
 
-};
+
 
 addDepartment = () => {
 
@@ -331,19 +336,19 @@ addDepartment = () => {
 
   }    
 
-  ]).then((res) => {
+  ]).then((val) => {
 
     let query = connection.query("INSERT INTO department SET ?",
     
     {
 
-      department_name: res.department
+      department_name: val.department
 
     },
     (err) => {
 
       if (err) throw err
-      console.table(res);
+      console.table(val);
       beginningPrompt(); 
 
     }
