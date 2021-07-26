@@ -49,7 +49,8 @@ connection.connect((err) => {
           case "View all Employees by Role":
               viewAllRoles();
             break;
-          case "View all Employees by Deparment":
+          
+           case "View all Employees by Deparment":
               viewAllDepartments();
             break;
           
@@ -98,12 +99,12 @@ viewAllRoles = () => {
 
 viewAllDepartments = () => {
 
-  connection.query("SELECT e.id AS ID, e.first_name AS 'First Name', e.last_name AS 'Last Name', role.title AS Title, department.department_name AS Department, role.salary AS Salary, concat(m.first_name, ' ' ,  m.last_name) AS Manager FROM employee e LEFT JOIN employee m ON e.manager_id = m.id INNER JOIN role ON e.role_id = role.id INNER JOIN department ON role.department_id = department.id ORDER BY ID ASC", 
-  (err, res) => {
+    connection.query("SELECT employee.first_name, employee.last_name, role.title AS Title FROM employee JOIN role ON employee.role_id = role.id;", 
+    (err, res) => {
     if (err) throw err
     console.table(res);
     beginningPrompt();
-  })
+    });
 
 };
 
@@ -210,7 +211,7 @@ updateEmployee = () => {
 
     if (err) throw err;
 
-    inquier.prompt ([
+     inquier.prompt ([
 
       {
 
@@ -220,7 +221,7 @@ updateEmployee = () => {
 
           let lastName = [];
 
-          for(i = 0; i < res.length; i++){
+          for(let i = 0; i < res.length; i++){
 
             lastName.push(res[i].last_name);
 
@@ -245,22 +246,19 @@ updateEmployee = () => {
       },
     ]).then((val) => {
       
+      let roleID = selectRole().indexOf(val.role) + 1;
+    
 
-      connection.query("UPDATE employee SET WHERE ?", 
+      connection.query(`UPDATE employee SET role_id = ${roleID} WHERE ?`, 
       {
 
-        last_name: val.last_name
-
-      },
-      {
-
-        role_id: val.role
+        last_name: val.last_name,
 
       },
       
       (err) => {
 
-        if (err) throw err;
+        if (err) throw err
         console.table(val)
         beginningPrompt()
 
@@ -318,6 +316,7 @@ addRole = () => {
       })
     })
   });
+
 };
 
 addDepartment = () => {
@@ -345,7 +344,7 @@ addDepartment = () => {
 
       if (err) throw err
       console.table(res);
-     beginningPrompt(); 
+      beginningPrompt(); 
 
     }
     
