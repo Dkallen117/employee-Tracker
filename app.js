@@ -76,7 +76,7 @@ connection.connect((err) => {
 
 viewAllEmployees = () => {
 
-    connection.query("SELECT employee.first_name, employee.last_name, role.title, role.salary, department.name, CONCAT(e.first_name, ' ' ,e.last_name) AS Manager FROM employee INNER JOIN role on role.id = employee.role_id INNER JOIN department on department.id = role.department_id left join employee e on employee.manager_id = e.id;", 
+    connection.query("SELECT employee.first_name, employee.last_name, role.title, role.salary, department.department_name, CONCAT(e.first_name, ' ' ,e.last_name) AS Manager FROM employee INNER JOIN role on role.id = employee.role_id INNER JOIN department on department.id = role.department_id left join employee e on employee.manager_id = e.id;", 
     (err, res) => {
       if (err) throw err
       console.table(res);
@@ -98,20 +98,35 @@ viewAllRoles = () => {
 
 viewAllDepartments = () => {
 
-    connection.query("SELECT employee.first_name, employee.last_name, department.name AS Department FROM employee JOIN role ON employee.role_id = role.id JOIN department ON role.department_id = department.id ORDER BY employee.id;", 
-    (err, res) => {
-      if (err) throw err
-      console.table(res);
-      beginningPrompt();
-    });
+  connection.query("SELECT e.id AS ID, e.first_name AS 'First Name', e.last_name AS 'Last Name', role.title AS Title, department.department_name AS Department, role.salary AS Salary, concat(m.first_name, ' ' ,  m.last_name) AS Manager FROM employee e LEFT JOIN employee m ON e.manager_id = m.id INNER JOIN role ON e.role_id = role.id INNER JOIN department ON role.department_id = department.id ORDER BY ID ASC", 
+  (err, res) => {
+    if (err) throw err
+    console.table(res);
+    beginningPrompt();
+  })
 
+};
+
+let deptArray = [];
+selectDepartment = () => {
+  connection.query("SELECT id, name FROM department", (err, res) => {
+    if (err) throw err
+    for (let i = 0; i < res.length; i++) {
+      deptArray.push(res[i].name);
+      
+    };
+
+  });
+  return deptArray;
 };
 
 let rolesArray = [];
 selectRole = () => {
   connection.query("SELECT * FROM role", (err, res) => {
     if (err) throw err
+
     for (let i = 0; i < res.length; i++) {
+
       rolesArray.push(res[i].title);
     };
 
@@ -171,8 +186,8 @@ addEmployee = () => {
         connection.query("INSERT INTO employee SET ?",
         {
 
-            firstName: val.first_name,
-            lastName: val.last_name,
+            first_name: val.first_name,
+            last_name: val.last_name,
             manager_id: managerID,
             role_id: roleID
 
@@ -199,7 +214,7 @@ updateEmployee = () => {
 
       {
 
-        name: "lastName",
+        name: "last_name",
         type: "rawlist",
         choices: () => {
 
@@ -229,17 +244,17 @@ updateEmployee = () => {
 
       },
     ]).then((val) => {
+      
 
-      let roleID = selectRole().indexOf(val.role) + 1
       connection.query("UPDATE employee SET WHERE ?", 
       {
 
-        last_name: val.lastName
+        last_name: val.last_name
 
       },
       {
 
-        role_id: roleID
+        role_id: val.role
 
       },
       
@@ -256,32 +271,42 @@ updateEmployee = () => {
 
 addRole = () => {
 
-  console.query("SELECT role.title AS Title, role.salary AS Salary FROM role", (err, res) => {
+  connection.query("SELECT role.title AS Title, role.salary AS Salary, role.department_id AS Department FROM role", (err, res) => {
 
     inquier.prompt([
 
       {
 
-        name:"Title",
+        name:"title",
         type: "input",
         message: "What is the title of this role?"
 
       },
       {
 
-        name: "Salary",
-        type: "input",
+        name: "salary",
+        type: "number",
         message: "What is the salary for this role?"        
+
+      },
+      {
+
+        name:"department_id",
+        type: "rawlist",
+        message:"Which department will this role be under?",
+        choices: selectDepartment()
 
       }
     ]).then((res) => {
+
 
       connection.query("INSERT INTO role SET ?",
       
       {
 
-        title: res.Title,
-        salary: res.Salary,
+        title: res.title,
+        salary: res.salary,
+        department_id: res.department_id
 
       },
       (err) => {
@@ -313,7 +338,7 @@ addDepartment = () => {
     
     {
 
-      name: res.department
+      department_name: res.department
 
     },
     (err) => {

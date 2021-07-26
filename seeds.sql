@@ -1,15 +1,15 @@
 USE employee_trackerDB;  
 
-INSERT INTO department(id, name)
+INSERT INTO department(id, department_name)
 VALUE (1, "Production");
 
-INSERT INTO department (id, name)
+INSERT INTO department (id, department_name)
 VALUE (2, "Design");
 
-INSERT INTO department (id, name)
+INSERT INTO department (id, department_name)
 VALUE (3, "Programming");
 
-INSERT INTO department (id, name)
+INSERT INTO department (id, department_name)
 VALUE (4, "Art");
 
 
