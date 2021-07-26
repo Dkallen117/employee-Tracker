@@ -18,7 +18,7 @@ connection.connect((err) => {
     beginningPrompt();
   });
 
-  beginningPrompt = () => {
+beginningPrompt = () => {
 
     inquier.prompt([
 
