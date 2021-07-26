@@ -188,3 +188,141 @@ addEmployee = () => {
     });
 
 };
+
+updateEmployee = () => {
+
+  connection.query("SELECT employee.last_name, role.title FROM employee JOIN role ON employee.role_id = role.id;", (err, res) => {
+
+    if (err) throw err;
+
+    inquier.prompt ([
+
+      {
+
+        name: "lastName",
+        type: "rawlist",
+        choices: () => {
+
+          let lastName = [];
+
+          for(i = 0; i < res.length; i++){
+
+            lastName.push(res[i].last_name);
+
+          }
+
+          return lastName;
+
+        },
+
+        message:"Select the employee's last name",
+
+      },
+
+      {
+
+        name: "role",
+        type: "rawlist",
+        message: "Select the employee's new role",
+        choices: selectRole()
+
+
+      },
+    ]).then((val) => {
+
+      let roleID = selectRole().indexOf(val.role) + 1
+      connection.query("UPDATE employee SET WHERE ?", 
+      {
+
+        last_name: val.lastName
+
+      },
+      {
+
+        role_id: roleID
+
+      },
+      
+      (err) => {
+
+        if (err) throw err;
+        console.table(val)
+        beginningPrompt()
+
+      })
+    })
+  })
+};
+
+addRole = () => {
+
+  console.query("SELECT role.title AS Title, role.salary AS Salary FROM role", (err, res) => {
+
+    inquier.prompt([
+
+      {
+
+        name:"Title",
+        type: "input",
+        message: "What is the title of this role?"
+
+      },
+      {
+
+        name: "Salary",
+        type: "input",
+        message: "What is the salary for this role?"        
+
+      }
+    ]).then((res) => {
+
+      connection.query("INSERT INTO role SET ?",
+      
+      {
+
+        title: res.Title,
+        salary: res.Salary,
+
+      },
+      (err) => {
+
+        if(err) throw err;
+        console.table(res);
+        beginningPrompt();
+
+      })
+    })
+  });
+};
+
+addDepartment = () => {
+
+  inquier.prompt([
+
+  {
+
+    name: "department",
+    type: "input",
+    message: "What is the department you'd like to add?"
+
+  }    
+
+  ]).then((res) => {
+
+    let query = connection.query("INSERT INTO department SET ?",
+    
+    {
+
+      name: res.department
+
+    },
+    (err) => {
+
+      if (err) throw err
+      console.table(res);
+     beginningPrompt(); 
+
+    }
+    
+    )})
+};
