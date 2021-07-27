@@ -145,7 +145,7 @@ selectRole = () => {
 // Function to select a manager
 let managersArray = [];
 selectManager = () => {
-  connection.query("SELECT first_name, last_name FROM employee WHERE manager_id IS NULL", function(err, val) {
+  connection.query("SELECT first_name, last_name FROM employee WHERE manager_id IS NOT NULL", function(err, val) {
     if (err) throw err
     for (let i = 0; i < val.length; i++) {
       managersArray.push(val[i].first_name);
