@@ -269,13 +269,6 @@ updateEmployee = () => {
 
 addRole = () => {
 
-  // const departmentChoices = department.map(({ id, name }) => ({
-  //   name: name,
-  //   value: id
-  // }));
-
- 
-    console.log("About to prompt");
      inquier.prompt([
 
       {
@@ -302,7 +295,6 @@ addRole = () => {
       },
     ]).then((val) => {
 
-      console.log("hello");
       let deptID = selectDepartment().indexOf(val.department_id) + 1
       connection.query("INSERT INTO role SET ?",
       
