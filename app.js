@@ -1,4 +1,4 @@
-const inquier = require("inquirer");
+const inquirer = require("inquirer");
 const mysql = require("mysql");
 const consoleTable = require("console.table");
 
@@ -20,7 +20,7 @@ connection.connect((err) => {
 
 beginningPrompt = () => {
 
-    inquier.prompt([
+    inquirer.prompt([
 
     {
         type: "list",
@@ -149,7 +149,7 @@ selectManager = () => {
 
 addEmployee = () => {
 
-    inquier.prompt([
+    inquirer.prompt([
 
         {
             name: "first_name",
@@ -211,7 +211,7 @@ updateEmployee = () => {
 
     if (err) throw err;
 
-     inquier.prompt ([
+     inquirer.prompt ([
 
       {
 
@@ -269,7 +269,7 @@ updateEmployee = () => {
 
 addRole = () => {
 
-     inquier.prompt([
+     inquirer.prompt([
 
       {
 
@@ -319,7 +319,7 @@ addRole = () => {
 
 addDepartment = () => {
 
-  inquier.prompt([
+  inquirer.prompt([
 
   {
 
