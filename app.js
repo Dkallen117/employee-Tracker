@@ -110,10 +110,10 @@ viewAllDepartments = () => {
 
 let deptArray = [];
 selectDepartment = () => {
-  connection.query("SELECT id, name FROM department", (err, val) => {
+  connection.query("SELECT id, department_name FROM department", (err, val) => {
     if (err) throw err
     for (let i = 0; i < val.length; i++) {
-      deptArray.push(val[i].name);
+      deptArray.push(val[i].department_name);
       
     };
 
@@ -275,7 +275,7 @@ addRole = () => {
   // }));
 
  
-
+    console.log("About to prompt");
      inquier.prompt([
 
       {
@@ -302,6 +302,7 @@ addRole = () => {
       },
     ]).then((val) => {
 
+      console.log("hello");
       let deptID = selectDepartment().indexOf(val.department_id) + 1
       connection.query("INSERT INTO role SET ?",
       
