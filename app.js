@@ -2,7 +2,7 @@ const inquirer = require("inquirer");
 const mysql = require("mysql");
 const consoleTable = require("console.table");
 
-
+// Sets connection with MySQL
 const connection = mysql.createConnection({
 
     host: "localhost",
@@ -13,11 +13,13 @@ const connection = mysql.createConnection({
 
 })
 
+// Start the connection, initiate beginning prompt
 connection.connect((err) => {
     if (err) throw err;
     beginningPrompt();
   });
 
+// First set of selections
 beginningPrompt = () => {
 
     inquirer.prompt([
@@ -40,6 +42,7 @@ beginningPrompt = () => {
 
     }
 
+    // Switch cases for above selections
     ]).then((val) => {
         switch (val.selections) {
             case "View all Employees":
@@ -74,7 +77,7 @@ beginningPrompt = () => {
     });
 };
 
-
+// Function to view all employees
 viewAllEmployees = () => {
 
     connection.query("SELECT employee.first_name, employee.last_name, role.title, role.salary, department.department_name, CONCAT(e.first_name, ' ' ,e.last_name) AS Manager FROM employee INNER JOIN role on role.id = employee.role_id INNER JOIN department on department.id = role.department_id left join employee e on employee.manager_id = e.id;", 
@@ -86,6 +89,7 @@ viewAllEmployees = () => {
 
 };
 
+// Function to view all employees by role
 viewAllRoles = () => {
 
     connection.query("SELECT employee.first_name, employee.last_name, role.title AS Title FROM employee JOIN role ON employee.role_id = role.id;", 
@@ -97,6 +101,7 @@ viewAllRoles = () => {
 
 };
 
+// Function to view all employees by department
 viewAllDepartments = () => {
  
     connection.query("SELECT employee.first_name, employee.last_name, department.department_name, department.id AS Department FROM employee JOIN role ON employee.role_id = role.id JOIN department ON role.department_id = department.id ORDER BY employee.id;", 
@@ -108,6 +113,7 @@ viewAllDepartments = () => {
 
 };
 
+// Function to select a department
 let deptArray = [];
 selectDepartment = () => {
   connection.query("SELECT id, department_name FROM department", (err, val) => {
@@ -121,6 +127,7 @@ selectDepartment = () => {
   return deptArray;
 };
 
+// Function to select a role
 let rolesArray = [];
 selectRole = () => {
   connection.query("SELECT * FROM role", (err, val) => {
@@ -135,6 +142,7 @@ selectRole = () => {
   return rolesArray;
 };
 
+// Function to select a manager
 let managersArray = [];
 selectManager = () => {
   connection.query("SELECT first_name, last_name FROM employee WHERE manager_id IS NULL", function(err, val) {
@@ -147,6 +155,7 @@ selectManager = () => {
   return managersArray;
 };
 
+// Function to add a new employee
 addEmployee = () => {
 
     inquirer.prompt([
@@ -179,6 +188,7 @@ addEmployee = () => {
 
         }
 
+        // Insert new values into table, +1 in both role and manager arrays
     ]).then((val) => {
 
         let roleID = selectRole().indexOf(val.role) + 1;
@@ -205,6 +215,7 @@ addEmployee = () => {
 
 };
 
+// Function to update an employee
 updateEmployee = () => {
 
   connection.query("SELECT employee.last_name, role.title FROM employee JOIN role ON employee.role_id = role.id;", (err, val) => {
@@ -244,6 +255,8 @@ updateEmployee = () => {
 
 
       },
+
+      // Push new values into table, +1 in role array, insert roleID into role_id
     ]).then((val) => {
       
       let roleID = selectRole().indexOf(val.role) + 1;
@@ -267,6 +280,7 @@ updateEmployee = () => {
   })
 };
 
+// Function to add a role
 addRole = () => {
 
      inquirer.prompt([
@@ -293,6 +307,8 @@ addRole = () => {
         choices: selectDepartment()
 
       },
+
+      // Push new values, +1 in the department array
     ]).then((val) => {
 
       let deptID = selectDepartment().indexOf(val.department_id) + 1
@@ -316,7 +332,7 @@ addRole = () => {
   };
 
 
-
+// Function to add a department
 addDepartment = () => {
 
   inquirer.prompt([
