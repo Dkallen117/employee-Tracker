@@ -50,8 +50,8 @@ beginningPrompt = () => {
               viewAllRoles();
             break;
           
-           case "View all Employees by Deparment":
-              viewAllDepartments();
+           case "View all Employees by Department":
+            viewAllDepartments();
             break;
           
           case "Add an Employee":
@@ -99,7 +99,7 @@ viewAllRoles = () => {
 
 viewAllDepartments = () => {
  
-    connection.query("SELECT employee.first_name, employee.last_name, department.department_name AS Department FROM employee JOIN role ON employee.role_id = role.id JOIN department ON role.department_id = department.id ORDER BY employee.id;", 
+    connection.query("SELECT employee.first_name, employee.last_name, department.department_name, department.id AS Department FROM employee JOIN role ON employee.role_id = role.id JOIN department ON role.department_id = department.id ORDER BY employee.id;", 
     (err, val) => {
     if (err) throw err
     console.table(val);

@@ -4,7 +4,7 @@ CREATE DATABASE employee_trackerDB;
 
 USE employee_trackerDB;
 
-//-------- Create Dept Table ---------//
+-- Create Dept Table
 
 CREATE TABLE department (
 
@@ -14,7 +14,7 @@ CREATE TABLE department (
 
 );
 
-//-------- Create Role Table ---------//
+-- Create Role Table
 
 CREATE TABLE  role (
 
@@ -27,7 +27,7 @@ CREATE TABLE  role (
 
 );
 
-//-------- Create Employee Table ---------//
+-- Create Employee Table 
 
 CREATE TABLE employee (
 

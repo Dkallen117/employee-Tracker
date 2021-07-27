@@ -1,6 +1,6 @@
 USE employee_trackerDB;  
 
-//---------------- Dept Values -------------------//
+-- Dept Values 
 
 INSERT INTO department(id, department_name)
 VALUE (1, "Production");
@@ -14,8 +14,7 @@ VALUE (3, "Programming");
 INSERT INTO department (id, department_name)
 VALUE (4, "Art");
 
-
-//---------------- Role Values -------------------//
+-- Role Values
 
 INSERT INTO role (id, title, salary, department_id)
 VALUES (1, "Studio Manager", 95000, 1);
@@ -54,7 +53,7 @@ INSERT INTO role (id, title, salary, department_id)
 VALUES (12, "3D Modeling Artist", 57000, 4);
 
 
-//---------------- Employee Values ---------------------//
+-- Employee Values
 
 INSERT INTO employee (id, first_name, last_name, role_id, manager_id)
 VALUES (4, "Jacob", "Hines", 1, 4);
