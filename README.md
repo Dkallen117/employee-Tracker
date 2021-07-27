@@ -29,11 +29,12 @@ This application utilizes the Express and Inquirer npm packages to save and stor
     - Install necessary npm packages via `npm install`
 3. Navigate to the file location of the downloaded repository using the command line
 4. Run `node app.js`
-5. After completion, you'll be able to store and update new or current employee data.
+5. After initializing, you'll be able to store and update new or current employee data.
 
 
 ## Usage Demo
 
+![demo](Demo/employee_tracker_demo.gif)
 
 ## License ![GitHub](https://img.shields.io/github/license/smcheah/employee-Tracker)
 
