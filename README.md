@@ -34,7 +34,7 @@ This application utilizes the Express and Inquirer npm packages to save and stor
 
 ## Usage Demo
 
-![demo]<iframe src="https://drive.google.com/file/d/1m4o9NO3_P-VujjkiS-6aso_oIa2CLYd5/preview" width="640" height="480"></iframe>
+![demo](Demo/employee-tracker.gif)
 
 ## License ![GitHub](https://img.shields.io/github/license/smcheah/employee-Tracker)
 
